@@ -1,0 +1,1 @@
+console.log('This is the frontend index.js file');
