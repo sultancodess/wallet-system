@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { ObjectId } from 'mongodb'
-import clientPromise from '@/lib/mongodb'
-import { getAuthUser } from '@/lib/auth'
+import clientPromise from '../../../lib/mongodb.js'
+import { getAuthUser } from '../../../lib/auth.js'
 
 export async function GET(request) {
   try {

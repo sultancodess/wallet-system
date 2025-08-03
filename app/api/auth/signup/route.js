@@ -1,15 +1,43 @@
 import { NextResponse } from 'next/server'
-import clientPromise from '@/lib/mongodb'
-import { hashPassword, generateToken } from '@/lib/auth'
-import { encryptBalance } from '@/lib/encryption'
+import clientPromise from '../../../../lib/mongodb.js'
+import { hashPassword, generateToken } from '../../../../lib/auth.js'
+import { encryptBalance } from '../../../../lib/encryption.js'
+import { validateEmail, validatePassword, validateName, sanitizeInput } from '@/lib/validation'
 
 export async function POST(request) {
   try {
     const { name, email, password, isPremium } = await request.json()
 
+    // Validate required fields
     if (!name || !email || !password) {
       return NextResponse.json(
         { message: 'Name, email, and password are required' },
+        { status: 400 }
+      )
+    }
+
+    // Sanitize inputs
+    const sanitizedName = sanitizeInput(name)
+    const sanitizedEmail = sanitizeInput(email.toLowerCase())
+
+    // Validate inputs
+    if (!validateName(sanitizedName)) {
+      return NextResponse.json(
+        { message: 'Name must be between 2-50 characters' },
+        { status: 400 }
+      )
+    }
+
+    if (!validateEmail(sanitizedEmail)) {
+      return NextResponse.json(
+        { message: 'Please enter a valid email address' },
+        { status: 400 }
+      )
+    }
+
+    if (!validatePassword(password)) {
+      return NextResponse.json(
+        { message: 'Password must be at least 8 characters with uppercase, lowercase, and number' },
         { status: 400 }
       )
     }
@@ -18,7 +46,7 @@ export async function POST(request) {
     const db = client.db('stageone_wallet')
 
     // Check if user already exists
-    const existingUser = await db.collection('users').findOne({ email })
+    const existingUser = await db.collection('users').findOne({ email: sanitizedEmail })
     if (existingUser) {
       return NextResponse.json(
         { message: 'User already exists' },
@@ -31,10 +59,10 @@ export async function POST(request) {
 
     // Create user
     const user = {
-      name,
-      email,
+      name: sanitizedName,
+      email: sanitizedEmail,
       password: hashedPassword,
-      isPremium: isPremium || false,
+      isPremium: Boolean(isPremium),
       createdAt: new Date(),
       updatedAt: new Date()
     }
@@ -57,9 +85,9 @@ export async function POST(request) {
     // Generate JWT token
     const token = generateToken({
       userId: userId.toString(),
-      email,
-      name,
-      isPremium: isPremium || false
+      email: sanitizedEmail,
+      name: sanitizedName,
+      isPremium: Boolean(isPremium)
     })
 
     return NextResponse.json({
@@ -67,9 +95,9 @@ export async function POST(request) {
       token,
       user: {
         id: userId,
-        name,
-        email,
-        isPremium: isPremium || false
+        name: sanitizedName,
+        email: sanitizedEmail,
+        isPremium: Boolean(isPremium)
       }
     })
 

@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server'
 import { ObjectId } from 'mongodb'
-import clientPromise from '@/lib/mongodb'
-import { getAuthUser } from '@/lib/auth'
-import { decryptBalance } from '@/lib/encryption'
+import clientPromise from '../../../lib/mongodb.js'
+import { getAuthUser } from '../../../lib/auth.js'
+import { decryptBalance } from '../../../lib/encryption.js'
 
 export async function GET(request) {
   try {

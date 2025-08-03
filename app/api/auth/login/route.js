@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
-import clientPromise from '@/lib/mongodb'
-import { comparePassword, generateToken } from '@/lib/auth'
+import clientPromise from '../../../../lib/mongodb.js'
+import { comparePassword, generateToken } from '../../../../lib/auth.js'
 
 export async function POST(request) {
   try {

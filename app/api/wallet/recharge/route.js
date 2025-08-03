@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server'
 import { ObjectId } from 'mongodb'
-import clientPromise from '@/lib/mongodb'
-import { getAuthUser } from '@/lib/auth'
-import { encryptBalance, decryptBalance } from '@/lib/encryption'
+import clientPromise from '../../../../lib/mongodb.js'
+import { getAuthUser } from '../../../../lib/auth.js'
+import { encryptBalance, decryptBalance } from '../../../../lib/encryption.js'
+import { validateAmount } from '@/lib/validation'
 
 export async function POST(request) {
   try {
@@ -16,12 +17,14 @@ export async function POST(request) {
 
     const { amount } = await request.json()
 
-    if (!amount || amount <= 0) {
+    if (!validateAmount(amount)) {
       return NextResponse.json(
-        { message: 'Invalid amount' },
+        { message: 'Amount must be between ₹1 and ₹1,00,000' },
         { status: 400 }
       )
     }
+
+    const rechargeAmount = parseFloat(amount)
 
     const client = await clientPromise
     const db = client.db('stageone_wallet')
@@ -46,8 +49,8 @@ export async function POST(request) {
         const currentTotalCredited = decryptBalance(wallet.totalCredited)
 
         // Calculate new balances
-        const newBalance = currentBalance + amount
-        const newTotalCredited = currentTotalCredited + amount
+        const newBalance = currentBalance + rechargeAmount
+        const newTotalCredited = currentTotalCredited + rechargeAmount
 
         // Update wallet
         await db.collection('wallets').updateOne(
@@ -67,7 +70,7 @@ export async function POST(request) {
         await db.collection('transactions').insertOne({
           userId: new ObjectId(user.userId),
           type: 'credit',
-          amount: amount,
+          amount: rechargeAmount,
           description: 'Wallet Recharge',
           balanceAfter: newBalance,
           createdAt: new Date()
@@ -76,7 +79,7 @@ export async function POST(request) {
 
       return NextResponse.json({
         message: 'Wallet recharged successfully',
-        amount: amount
+        amount: rechargeAmount
       })
 
     } finally {

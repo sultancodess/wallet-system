@@ -39,6 +39,10 @@ export default function DashboardPage() {
         const walletData = await walletRes.json()
         setWallet(walletData.wallet)
         setUser(walletData.user)
+      } else if (walletRes.status === 401) {
+        localStorage.removeItem('token')
+        router.push('/auth/login')
+        return
       }
 
       if (transactionsRes.ok) {
@@ -47,6 +51,7 @@ export default function DashboardPage() {
       }
     } catch (error) {
       console.error('Error fetching dashboard data:', error)
+      alert('Failed to load dashboard data. Please refresh the page.')
     } finally {
       setLoading(false)
     }
