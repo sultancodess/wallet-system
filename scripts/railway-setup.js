@@ -16,20 +16,19 @@ const isRailway =
 if (isRailway) {
   console.log("✅ Railway environment detected");
 
-  // Set default values for missing environment variables during build
-  if (!process.env.MONGODB_URI) {
-    process.env.MONGODB_URI = "mongodb://localhost:27017/stageone_wallet";
-    console.log("⚠️  Using default MongoDB URI for build");
-  }
+  // Force local database for Railway deployment
+  process.env.USE_LOCAL_DB = "true";
+  console.log("✅ Using local database for Railway deployment");
 
+  // Set default values for missing environment variables during build
   if (!process.env.JWT_SECRET) {
-    process.env.JWT_SECRET = "railway-build-jwt-secret";
-    console.log("⚠️  Using default JWT secret for build");
+    process.env.JWT_SECRET = "railway-production-jwt-secret-" + Date.now();
+    console.log("✅ Generated JWT secret for production");
   }
 
   if (!process.env.ENCRYPTION_SECRET) {
-    process.env.ENCRYPTION_SECRET = "railway-build-encryption-secret";
-    console.log("⚠️  Using default encryption secret for build");
+    process.env.ENCRYPTION_SECRET = "railway-production-encryption-secret-" + Date.now();
+    console.log("✅ Generated encryption secret for production");
   }
 
   // Set NODE_ENV to production for Railway

@@ -68,10 +68,10 @@ GET  /api/transactions   # Get history
 
 ## Deployment
 
-**Railway.app:**
-1. Connect GitHub repo
-2. Set environment variables
-3. Deploy automatically
+**Railway.app (One-Click):**
+1. Connect GitHub repo → Auto-deploys with local database
+2. Optional: Set `JWT_SECRET` and `ENCRYPTION_SECRET` 
+3. Ready to use immediately
 
 **Manual:**
 ```bash

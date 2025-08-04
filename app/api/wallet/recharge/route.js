@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server'
-import { ObjectId } from 'mongodb'
 import clientPromise from '../../../../lib/mongodb.js'
 import { getAuthUser } from '../../../../lib/auth.js'
 import { encryptBalance, decryptBalance } from '../../../../lib/encryption.js'
+import { isValidUserId, createUserIdQuery, createUserId } from '../../../../lib/db-utils.js'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
@@ -26,8 +26,8 @@ export async function POST(request) {
       )
     }
 
-    // Validate user ID format (supports both MongoDB ObjectId and local DB format)
-    if (!user.userId || (user.userId.length !== 24 && user.userId.length !== 9)) {
+    // Validate user ID format
+    if (!isValidUserId(user.userId)) {
       return NextResponse.json(
         { message: 'Invalid user ID format' },
         { status: 400 }
@@ -44,13 +44,9 @@ export async function POST(request) {
 
     try {
       await session.withTransaction(async () => {
-        // Get current wallet (handle both ObjectId and string formats)
-        const walletQuery = user.userId.length === 24
-          ? { userId: new ObjectId(user.userId) }
-          : { userId: user.userId }
-        
+        // Get current wallet
         const wallet = await db.collection('wallets').findOne(
-          walletQuery,
+          createUserIdQuery(user.userId, 'userId'),
           { session }
         )
 
@@ -67,12 +63,8 @@ export async function POST(request) {
         const newTotalCredited = currentTotalCredited + rechargeAmount
 
         // Update wallet
-        const updateQuery = user.userId.length === 24
-          ? { userId: new ObjectId(user.userId) }
-          : { userId: user.userId }
-        
         await db.collection('wallets').updateOne(
-          updateQuery,
+          createUserIdQuery(user.userId, 'userId'),
           {
             $set: {
               balance: encryptBalance(newBalance),
@@ -85,12 +77,8 @@ export async function POST(request) {
         )
 
         // Create transaction record
-        const transactionUserId = user.userId.length === 24
-          ? new ObjectId(user.userId)
-          : user.userId
-        
         await db.collection('transactions').insertOne({
-          userId: transactionUserId,
+          userId: createUserId(user.userId),
           type: 'credit',
           amount: rechargeAmount,
           description: 'Wallet Recharge',
