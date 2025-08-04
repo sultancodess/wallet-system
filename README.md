@@ -68,7 +68,19 @@ GET  /api/transactions   # Get history
 
 ## Deployment
 
-**Railway.app (One-Click):**
+**Vercel (Recommended):**
+1. Connect GitHub repo to Vercel
+2. Set environment variables in Vercel dashboard:
+   ```
+   MONGODB_URI=your-mongodb-connection-string
+   JWT_SECRET=your-jwt-secret
+   ENCRYPTION_SECRET=your-encryption-secret
+   NODE_ENV=production
+   USE_LOCAL_DB=false
+   ```
+3. Deploy automatically
+
+**Railway.app:**
 1. Connect GitHub repo → Auto-deploys with local database
 2. Optional: Set `JWT_SECRET` and `ENCRYPTION_SECRET` 
 3. Ready to use immediately

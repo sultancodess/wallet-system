@@ -1,0 +1,17 @@
+{
+  "env": {
+    "USE_LOCAL_DB": "false",
+    "NODE_ENV": "production"
+  },
+  "build": {
+    "env": {
+      "USE_LOCAL_DB": "false",
+      "NODE_ENV": "production"
+    }
+  },
+  "functions": {
+    "app/api/**/*.js": {
+      "maxDuration": 30
+    }
+  }
+}
