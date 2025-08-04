@@ -1,0 +1,62 @@
+{
+  "users": [
+    {
+      "name": "sultan alam",
+      "email": "shekhsultan16@gmail.com",
+      "password": "$2a$12$MVdQQlgSD2kAiY/ygHzUouV5bBDbFR0cGAvQX2KK4XVAbhLyiS4/6",
+      "isPremium": true,
+      "createdAt": "2025-08-04T13:37:56.537Z",
+      "updatedAt": "2025-08-04T13:37:56.537Z",
+      "_id": "4xwr38cye"
+    },
+    {
+      "name": "sultan alam",
+      "email": "shekhsultan6@gmail.com",
+      "password": "$2a$12$ly9eARUC1VyWs1dCcUeYn.hec0z55EvGASPyUtF049cG9gn50WiSe",
+      "isPremium": false,
+      "createdAt": "2025-08-04T13:58:42.903Z",
+      "updatedAt": "2025-08-04T13:58:42.903Z",
+      "_id": "vrqj7v8mc"
+    }
+  ],
+  "wallets": [
+    {
+      "userId": "4xwr38cye",
+      "balance": "U2FsdGVkX1+H9BT0KmpBDUlq8E1oEcSZ689Zve++csE=",
+      "lastRechargeDate": null,
+      "totalCredited": "U2FsdGVkX19c+EXasFc4anxrz/pl+3Srs6fJcfctvbw=",
+      "createdAt": "2025-08-04T13:37:56.580Z",
+      "updatedAt": "2025-08-04T13:37:56.580Z",
+      "_id": "md5ldl0zi"
+    },
+    {
+      "userId": "vrqj7v8mc",
+      "balance": "U2FsdGVkX1+SPIY2KKU1XvPkEzVBmMY/COj8v0htXaU=",
+      "lastRechargeDate": "2025-08-04T13:58:52.341Z",
+      "totalCredited": "U2FsdGVkX1+MW2BT7bqtwYmIKEeFZeEdDX4ooBgWomM=",
+      "createdAt": "2025-08-04T13:58:42.936Z",
+      "updatedAt": "2025-08-04T13:59:02.380Z",
+      "_id": "he0rptrcj"
+    }
+  ],
+  "transactions": [
+    {
+      "userId": "vrqj7v8mc",
+      "type": "credit",
+      "amount": 100,
+      "description": "Wallet Recharge",
+      "balanceAfter": 100,
+      "createdAt": "2025-08-04T13:58:52.348Z",
+      "_id": "6jts20a7u"
+    },
+    {
+      "userId": "vrqj7v8mc",
+      "type": "debit",
+      "amount": 9,
+      "description": "Mock Order Payment",
+      "balanceAfter": 91,
+      "createdAt": "2025-08-04T13:59:02.389Z",
+      "_id": "qfl92kcy1"
+    }
+  ]
+}

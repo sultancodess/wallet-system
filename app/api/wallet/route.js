@@ -20,16 +20,30 @@ export async function GET(request) {
     const client = await clientPromise
     const db = client.db('stageone_wallet')
 
-    // Get user details
+    // Validate user ID format (supports both MongoDB ObjectId and local DB format)
+    if (!user.userId || (user.userId.length !== 24 && user.userId.length !== 9)) {
+      return NextResponse.json(
+        { message: 'Invalid user ID format' },
+        { status: 400 }
+      )
+    }
+
+    // Get user details (handle both ObjectId and string formats)
+    const userQuery = user.userId.length === 24 
+      ? { _id: new ObjectId(user.userId) }
+      : { _id: user.userId }
+    
     const userDetails = await db.collection('users').findOne(
-      { _id: new ObjectId(user.userId) },
+      userQuery,
       { projection: { password: 0 } }
     )
 
     // Get wallet details
-    const wallet = await db.collection('wallets').findOne({
-      userId: new ObjectId(user.userId)
-    })
+    const walletQuery = user.userId.length === 24
+      ? { userId: new ObjectId(user.userId) }
+      : { userId: user.userId }
+    
+    const wallet = await db.collection('wallets').findOne(walletQuery)
 
     if (!wallet) {
       return NextResponse.json(

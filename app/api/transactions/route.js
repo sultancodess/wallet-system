@@ -19,9 +19,21 @@ export async function GET(request) {
     const client = await clientPromise
     const db = client.db('stageone_wallet')
 
-    // Get transactions for the user
+    // Validate user ID format (supports both MongoDB ObjectId and local DB format)
+    if (!user.userId || (user.userId.length !== 24 && user.userId.length !== 9)) {
+      return NextResponse.json(
+        { message: 'Invalid user ID format' },
+        { status: 400 }
+      )
+    }
+
+    // Get transactions for the user (handle both ObjectId and string formats)
+    const transactionQuery = user.userId.length === 24
+      ? { userId: new ObjectId(user.userId) }
+      : { userId: user.userId }
+    
     const transactions = await db.collection('transactions')
-      .find({ userId: new ObjectId(user.userId) })
+      .find(transactionQuery)
       .sort({ createdAt: -1 })
       .limit(50)
       .toArray()

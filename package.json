@@ -6,12 +6,7 @@
     "dev": "next dev",
     "build": "node scripts/railway-setup.js && next build",
     "start": "next start",
-    "lint": "next lint",
-    "railway:setup": "node scripts/railway-setup.js",
-    "build:railway": "NODE_ENV=production node scripts/railway-setup.js && next build",
-    "fix": "node fix-dev.js",
-    "dev:clean": "node fix-dev.js && next dev",
-    "dev:local": "node setup-local-db.js && next dev"
+    "lint": "next lint"
   },
   "dependencies": {
     "next": "14.0.0",

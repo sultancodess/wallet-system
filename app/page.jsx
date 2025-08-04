@@ -59,8 +59,8 @@ export default function HomePage() {
               Get Started Free
               <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Link>
-            <Link href="/demo" className="group border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-xl text-lg font-semibold hover:border-blue-600 hover:text-blue-600 transition-all duration-200 bg-white/50 backdrop-blur-sm">
-              View Live Demo
+            <Link href="/auth/login" className="group border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-xl text-lg font-semibold hover:border-blue-600 hover:text-blue-600 transition-all duration-200 bg-white/50 backdrop-blur-sm">
+              Sign In
             </Link>
           </div>
 
@@ -465,7 +465,7 @@ export default function HomePage() {
                 <li><a href="#features" className="text-gray-400 hover:text-white transition-colors duration-200">Features</a></li>
                 <li><a href="#how-it-works" className="text-gray-400 hover:text-white transition-colors duration-200">How it Works</a></li>
                 <li><a href="#pricing" className="text-gray-400 hover:text-white transition-colors duration-200">Pricing</a></li>
-                <li><Link href="/demo" className="text-gray-400 hover:text-white transition-colors duration-200">Demo</Link></li>
+                <li><Link href="/auth/login" className="text-gray-400 hover:text-white transition-colors duration-200">Login</Link></li>
               </ul>
             </div>
 

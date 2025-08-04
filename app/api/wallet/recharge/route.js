@@ -19,9 +19,17 @@ export async function POST(request) {
 
     const { amount } = await request.json()
 
-    if (!validateAmount(amount)) {
+    if (!amount || amount <= 0 || amount > 100000) {
       return NextResponse.json(
         { message: 'Amount must be between ₹1 and ₹1,00,000' },
+        { status: 400 }
+      )
+    }
+
+    // Validate user ID format (supports both MongoDB ObjectId and local DB format)
+    if (!user.userId || (user.userId.length !== 24 && user.userId.length !== 9)) {
+      return NextResponse.json(
+        { message: 'Invalid user ID format' },
         { status: 400 }
       )
     }
@@ -36,9 +44,13 @@ export async function POST(request) {
 
     try {
       await session.withTransaction(async () => {
-        // Get current wallet
+        // Get current wallet (handle both ObjectId and string formats)
+        const walletQuery = user.userId.length === 24
+          ? { userId: new ObjectId(user.userId) }
+          : { userId: user.userId }
+        
         const wallet = await db.collection('wallets').findOne(
-          { userId: new ObjectId(user.userId) },
+          walletQuery,
           { session }
         )
 
@@ -55,8 +67,12 @@ export async function POST(request) {
         const newTotalCredited = currentTotalCredited + rechargeAmount
 
         // Update wallet
+        const updateQuery = user.userId.length === 24
+          ? { userId: new ObjectId(user.userId) }
+          : { userId: user.userId }
+        
         await db.collection('wallets').updateOne(
-          { userId: new ObjectId(user.userId) },
+          updateQuery,
           {
             $set: {
               balance: encryptBalance(newBalance),
@@ -69,8 +85,12 @@ export async function POST(request) {
         )
 
         // Create transaction record
+        const transactionUserId = user.userId.length === 24
+          ? new ObjectId(user.userId)
+          : user.userId
+        
         await db.collection('transactions').insertOne({
-          userId: new ObjectId(user.userId),
+          userId: transactionUserId,
           type: 'credit',
           amount: rechargeAmount,
           description: 'Wallet Recharge',
