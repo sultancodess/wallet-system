@@ -71,7 +71,7 @@ GET  /api/transactions   # Get history
 **Railway.app (One-Click):**
 1. Connect GitHub repo → Auto-deploys with local database
 2. Optional: Set `JWT_SECRET` and `ENCRYPTION_SECRET` 
-3. Ready to use immediately
+3. Ready to use immediately ✅
 
 **Manual:**
 ```bash
