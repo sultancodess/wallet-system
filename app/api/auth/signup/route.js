@@ -18,28 +18,28 @@ export async function POST(request) {
       )
     }
 
-    // Sanitize inputs
-    const sanitizedName = sanitizeInput(name)
-    const sanitizedEmail = sanitizeInput(email.toLowerCase())
+    // Basic validation and sanitization
+    const sanitizedName = name.trim()
+    const sanitizedEmail = email.toLowerCase().trim()
 
     // Validate inputs
-    if (!validateName(sanitizedName)) {
+    if (sanitizedName.length < 2 || sanitizedName.length > 50) {
       return NextResponse.json(
         { message: 'Name must be between 2-50 characters' },
         { status: 400 }
       )
     }
 
-    if (!validateEmail(sanitizedEmail)) {
+    if (!sanitizedEmail.includes('@') || sanitizedEmail.length < 5) {
       return NextResponse.json(
         { message: 'Please enter a valid email address' },
         { status: 400 }
       )
     }
 
-    if (!validatePassword(password)) {
+    if (password.length < 4) {
       return NextResponse.json(
-        { message: 'Password must be at least 8 characters with uppercase, lowercase, and number' },
+        { message: 'Password must be at least 4 characters long' },
         { status: 400 }
       )
     }

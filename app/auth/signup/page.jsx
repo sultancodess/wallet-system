@@ -20,12 +20,9 @@ export default function SignupPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const router = useRouter();
 
-  // Password validation rules
+  // Simple password validation rules - Made Easy!
   const passwordRules = [
-    { rule: /.{8,}/, text: "At least 8 characters" },
-    { rule: /[A-Z]/, text: "One uppercase letter" },
-    { rule: /[a-z]/, text: "One lowercase letter" },
-    { rule: /\d/, text: "One number" },
+    { rule: /.{4,}/, text: "At least 4 characters" },
   ];
 
   const validatePassword = (password) => {
@@ -36,7 +33,7 @@ export default function SignupPage() {
   };
 
   const isPasswordValid = (password) => {
-    return passwordRules.every(({ rule }) => rule.test(password));
+    return password.length >= 4; // Super simple - just 4 characters minimum
   };
 
   const handleSubmit = async (e) => {
@@ -57,7 +54,7 @@ export default function SignupPage() {
     }
 
     if (!isPasswordValid(formData.password)) {
-      errors.password = "Password does not meet requirements";
+      errors.password = "Password must be at least 4 characters";
     }
 
     if (formData.password !== formData.confirmPassword) {
