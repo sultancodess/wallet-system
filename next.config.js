@@ -1,12 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    appDir: true,
-  },
+  // Remove experimental.appDir as it's now stable in Next.js 14
+  // Environment variables are automatically available in Next.js 14
+  
+  // Optional: Add other configurations
+  poweredByHeader: false,
+  compress: true,
+  
+  // Handle build-time environment variables
   env: {
-    MONGODB_URI: process.env.MONGODB_URI,
-    JWT_SECRET: process.env.JWT_SECRET,
-    ENCRYPTION_SECRET: process.env.ENCRYPTION_SECRET,
+    CUSTOM_KEY: 'my-value',
   },
 }
 

@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "node scripts/railway-setup.js && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "railway:setup": "node scripts/railway-setup.js"
   },
   "dependencies": {
     "next": "14.0.0",
