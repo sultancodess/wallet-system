@@ -17,6 +17,15 @@
       "createdAt": "2025-08-04T13:58:42.903Z",
       "updatedAt": "2025-08-04T13:58:42.903Z",
       "_id": "vrqj7v8mc"
+    },
+    {
+      "name": "codex",
+      "email": "shekhsultan436@gmail.com",
+      "password": "$2a$12$Top5cS5Epr0leiOYl/yxB.uLnL8Pk4e1lbuUb0tCij.HsrAmT6DLy",
+      "isPremium": true,
+      "createdAt": "2025-08-04T15:17:59.836Z",
+      "updatedAt": "2025-08-04T15:17:59.836Z",
+      "_id": "65puq0p4g"
     }
   ],
   "wallets": [
@@ -31,12 +40,21 @@
     },
     {
       "userId": "vrqj7v8mc",
-      "balance": "U2FsdGVkX18ixMJdG2O5sHq7KnvoPac+b1OFPccXEx0=",
-      "lastRechargeDate": "2025-08-04T14:25:55.680Z",
-      "totalCredited": "U2FsdGVkX1/Dhnp3ngE+R2QqMoQ4zWF63lHB4T0Tl8A=",
+      "balance": "U2FsdGVkX1/fpbU5SKqWnh7yab1Mo9Fc6melieLJW50=",
+      "lastRechargeDate": "2025-08-04T15:17:32.783Z",
+      "totalCredited": "U2FsdGVkX19/5AP701hmcvw3Gj0PwigkbaR6+speeCU=",
       "createdAt": "2025-08-04T13:58:42.936Z",
-      "updatedAt": "2025-08-04T14:26:07.165Z",
+      "updatedAt": "2025-08-04T15:17:32.783Z",
       "_id": "he0rptrcj"
+    },
+    {
+      "userId": "65puq0p4g",
+      "balance": "U2FsdGVkX18xXHyLepXZSdD4mOeCudr4LuU9BrC1XZc=",
+      "lastRechargeDate": "2025-08-04T15:18:42.232Z",
+      "totalCredited": "U2FsdGVkX19Z94k4yfBBw1GBM3tCmK0pRRF63xTx91w=",
+      "createdAt": "2025-08-04T15:17:59.839Z",
+      "updatedAt": "2025-08-04T15:18:42.232Z",
+      "_id": "uwqw0zepv"
     }
   ],
   "transactions": [
@@ -75,6 +93,51 @@
       "balanceAfter": 258,
       "createdAt": "2025-08-04T14:26:07.166Z",
       "_id": "syh6busnp"
+    },
+    {
+      "userId": "vrqj7v8mc",
+      "type": "credit",
+      "amount": 2000,
+      "description": "Wallet Recharge",
+      "balanceAfter": 2258,
+      "createdAt": "2025-08-04T15:06:02.690Z",
+      "_id": "qc9421x98"
+    },
+    {
+      "userId": "vrqj7v8mc",
+      "type": "debit",
+      "amount": 11,
+      "description": "Mock Order Payment",
+      "balanceAfter": 2247,
+      "createdAt": "2025-08-04T15:17:25.138Z",
+      "_id": "gs8phwwph"
+    },
+    {
+      "userId": "vrqj7v8mc",
+      "type": "credit",
+      "amount": 500,
+      "description": "Wallet Recharge",
+      "balanceAfter": 2747,
+      "createdAt": "2025-08-04T15:17:32.785Z",
+      "_id": "69t8w0n2i"
+    },
+    {
+      "userId": "65puq0p4g",
+      "type": "credit",
+      "amount": 1000,
+      "description": "Wallet Recharge",
+      "balanceAfter": 1000,
+      "createdAt": "2025-08-04T15:18:15.118Z",
+      "_id": "gvljg77ed"
+    },
+    {
+      "userId": "65puq0p4g",
+      "type": "credit",
+      "amount": 1000,
+      "description": "Wallet Recharge",
+      "balanceAfter": 2000,
+      "createdAt": "2025-08-04T15:18:42.234Z",
+      "_id": "c1kjr6tt7"
     }
   ]
 }

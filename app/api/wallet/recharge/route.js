@@ -37,7 +37,7 @@ export async function POST(request) {
     const rechargeAmount = parseFloat(amount)
 
     const client = await clientPromise
-    const db = client.db('stageone_wallet')
+    const db = client.db('wallet_system')
 
     // Start a session for transaction
     const session = client.startSession()

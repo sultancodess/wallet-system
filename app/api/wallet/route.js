@@ -18,7 +18,7 @@ export async function GET(request) {
     }
 
     const client = await clientPromise
-    const db = client.db('stageone_wallet')
+    const db = client.db('wallet_system')
 
     // Validate user ID format
     if (!isValidUserId(user.userId)) {

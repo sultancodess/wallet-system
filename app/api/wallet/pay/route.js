@@ -38,7 +38,7 @@ export async function POST(request) {
     const sanitizedDescription = (description || 'Payment').trim()
 
     const client = await clientPromise
-    const db = client.db('stageone_wallet')
+    const db = client.db('wallet_system')
 
     // Get user details to check premium status
     const userDetails = await db.collection('users').findOne(

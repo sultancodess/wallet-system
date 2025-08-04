@@ -1,70 +1,72 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Eye, EyeOff, Check, X } from "lucide-react";
+import { useState } from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { Eye, EyeOff, Check, X } from 'lucide-react'
+import { useToast } from '../../../components/ToastProvider'
 
 export default function SignupPage() {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
     isPremium: false,
-  });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [fieldErrors, setFieldErrors] = useState({});
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const router = useRouter();
+  })
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [fieldErrors, setFieldErrors] = useState({})
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const router = useRouter()
+  const { showSuccess, showError } = useToast()
 
   // Simple password validation rules - Made Easy!
   const passwordRules = [
     { rule: /.{4,}/, text: "At least 4 characters" },
-  ];
+  ]
 
   const validatePassword = (password) => {
     return passwordRules.map(({ rule, text }) => ({
       text,
       valid: rule.test(password),
-    }));
-  };
+    }))
+  }
 
   const isPasswordValid = (password) => {
-    return password.length >= 4; // Super simple - just 4 characters minimum
-  };
+    return password.length >= 4 // Super simple - just 4 characters minimum
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-    setFieldErrors({});
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+    setFieldErrors({})
 
     // Validate form fields
-    const errors = {};
+    const errors = {}
 
     if (!formData.name.trim() || formData.name.length < 2) {
-      errors.name = "Name must be at least 2 characters long";
+      errors.name = "Name must be at least 2 characters long"
     }
 
     if (!formData.email.includes("@")) {
-      errors.email = "Please enter a valid email address";
+      errors.email = "Please enter a valid email address"
     }
 
     if (!isPasswordValid(formData.password)) {
-      errors.password = "Password must be at least 4 characters";
+      errors.password = "Password must be at least 4 characters"
     }
 
     if (formData.password !== formData.confirmPassword) {
-      errors.confirmPassword = "Passwords do not match";
+      errors.confirmPassword = "Passwords do not match"
     }
 
     if (Object.keys(errors).length > 0) {
-      setFieldErrors(errors);
-      setLoading(false);
-      return;
+      setFieldErrors(errors)
+      setLoading(false)
+      return
     }
 
     try {
@@ -79,46 +81,49 @@ export default function SignupPage() {
           password: formData.password,
           isPremium: formData.isPremium,
         }),
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (response.ok) {
-        localStorage.setItem("token", data.token);
-        router.push("/dashboard");
+        localStorage.setItem("token", data.token)
+        showSuccess('Account created successfully! Redirecting to dashboard...')
+        setTimeout(() => router.push("/dashboard"), 1000)
       } else {
-        setError(data.message || "Signup failed");
+        setError(data.message || "Signup failed")
+        showError(data.message || "Signup failed")
       }
     } catch (error) {
-      setError("Network error. Please try again.");
+      setError("Network error. Please try again.")
+      showError("Network error. Please try again.")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleChange = (e) => {
     const value =
-      e.target.type === "checkbox" ? e.target.checked : e.target.value;
-    const name = e.target.name;
+      e.target.type === "checkbox" ? e.target.checked : e.target.value
+    const name = e.target.name
 
     setFormData({
       ...formData,
       [name]: value,
-    });
+    })
 
     // Clear field error when user starts typing
     if (fieldErrors[name]) {
       setFieldErrors({
         ...fieldErrors,
         [name]: "",
-      });
+      })
     }
 
     // Clear general error
     if (error) {
-      setError("");
+      setError("")
     }
-  };
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
@@ -133,7 +138,7 @@ export default function SignupPage() {
               <span className="text-white font-bold text-xl">S</span>
             </div>
             <div className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              StageOne Wallet
+              Wallet System
             </div>
           </Link>
           <h2 className="text-3xl font-bold text-gray-900 mb-2">
@@ -410,5 +415,5 @@ export default function SignupPage() {
         </form>
       </div>
     </div>
-  );
+  )
 }

@@ -1,4 +1,4 @@
-# StageOne Wallet
+# Wallet System
 
 A secure digital wallet system with encrypted balance storage, instant transactions, and premium features.
 
@@ -21,7 +21,7 @@ A secure digital wallet system with encrypted balance storage, instant transacti
 ```bash
 # Install
 git clone <repo-url>
-cd stageone-wallet
+cd wallet-system
 npm install
 
 # Run
@@ -34,7 +34,7 @@ Open `http://localhost:3000`
 
 Create `.env.local`:
 ```env
-MONGODB_URI=mongodb://localhost:27017/stageone_wallet
+MONGODB_URI=mongodb://localhost:27017/wallet_system
 JWT_SECRET=your-secret
 ENCRYPTION_SECRET=your-secret
 USE_LOCAL_DB=true
@@ -71,7 +71,7 @@ GET  /api/transactions   # Get history
 **Railway.app (One-Click):**
 1. Connect GitHub repo → Auto-deploys with local database
 2. Optional: Set `JWT_SECRET` and `ENCRYPTION_SECRET` 
-3. Ready to use immediately ✅
+3. Ready to use immediately
 
 **Manual:**
 ```bash
@@ -90,4 +90,4 @@ npm run lint    # ESLint
 
 ---
 
-**StageOne Wallet** - Secure. Fast. Reliable.
+**Wallet System** - Secure. Fast. Reliable.

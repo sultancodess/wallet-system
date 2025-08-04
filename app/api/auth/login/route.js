@@ -17,7 +17,7 @@ export async function POST(request) {
     }
 
     const client = await clientPromise
-    const db = client.db('stageone_wallet')
+    const db = client.db('wallet_system')
 
     // Find user
     const user = await db.collection('users').findOne({ email })

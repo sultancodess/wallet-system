@@ -13,7 +13,7 @@ export default function HomePage() {
                 <Sparkles className="h-6 w-6 text-white" />
               </div>
               <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                StageOne Wallet
+                Wallet System
               </div>
             </div>
             <nav className="hidden md:flex space-x-8">
@@ -438,7 +438,7 @@ export default function HomePage() {
                   <Sparkles className="h-7 w-7 text-white" />
                 </div>
                 <div className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
-                  StageOne Wallet
+                  Wallet System
                 </div>
               </div>
               <p className="text-gray-400 leading-relaxed max-w-md mb-6">
@@ -485,7 +485,7 @@ export default function HomePage() {
           <div className="border-t border-gray-700 pt-8">
             <div className="flex flex-col md:flex-row justify-between items-center">
               <div className="text-gray-400 mb-4 md:mb-0">
-                © 2025 StageOne Wallet. All rights reserved.
+                © 2025 Wallet System. All rights reserved.
               </div>
               <div className="flex space-x-6 text-sm">
                 <a href="#" className="text-gray-400 hover:text-white transition-colors duration-200">Privacy Policy</a>

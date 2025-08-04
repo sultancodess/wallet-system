@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { useToast } from '../../components/ToastProvider'
 import { 
   Wallet, 
   Plus, 
@@ -43,6 +44,7 @@ export default function DashboardPage() {
   const [filterType, setFilterType] = useState('all')
   const [showNotifications, setShowNotifications] = useState(false)
   const router = useRouter()
+  const { showSuccess, showError, showWarning } = useToast()
 
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -53,6 +55,18 @@ export default function DashboardPage() {
 
     fetchDashboardData(token)
   }, [router])
+
+  // Close notifications when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showNotifications && !event.target.closest('.notification-dropdown')) {
+        setShowNotifications(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [showNotifications])
 
   const fetchDashboardData = async (token) => {
     try {
@@ -92,7 +106,7 @@ export default function DashboardPage() {
     const amount = parseFloat(rechargeAmount)
 
     if (!amount || amount <= 0) {
-      alert('Please enter a valid amount')
+      showError('Please enter a valid amount')
       return
     }
 
@@ -109,13 +123,13 @@ export default function DashboardPage() {
       if (response.ok) {
         setRechargeAmount('')
         fetchDashboardData(token)
-        alert('Wallet recharged successfully!')
+        showSuccess('Wallet recharged successfully!')
       } else {
         const data = await response.json()
-        alert(data.message || 'Recharge failed')
+        showError(data.message || 'Recharge failed')
       }
     } catch (error) {
-      alert('Network error. Please try again.')
+      showError('Network error. Please try again.')
     }
   }
 
@@ -125,7 +139,7 @@ export default function DashboardPage() {
     const amount = parseFloat(paymentAmount)
 
     if (!amount || amount <= 0) {
-      alert('Please enter a valid amount')
+      showError('Please enter a valid amount')
       return
     }
 
@@ -142,13 +156,13 @@ export default function DashboardPage() {
       if (response.ok) {
         setPaymentAmount('')
         fetchDashboardData(token)
-        alert('Payment successful!')
+        showSuccess('Payment successful!')
       } else {
         const data = await response.json()
-        alert(data.message || 'Payment failed')
+        showError(data.message || 'Payment failed')
       }
     } catch (error) {
-      alert('Network error. Please try again.')
+      showError('Network error. Please try again.')
     }
   }
 
@@ -180,10 +194,10 @@ export default function DashboardPage() {
             {/* Logo and Brand */}
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center">
-                <img src="https://cdn-icons-png.flaticon.com/512/2830/2830284.png" alt="Wallet" className="w-6 h-6" />
+                <Wallet className="w-6 h-6 text-white" />
               </div>
               <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                StageOne Wallet
+                Wallet System
               </div>
             </div>
 
@@ -202,7 +216,7 @@ export default function DashboardPage() {
             {/* User Actions */}
             <div className="flex items-center space-x-4">
               {/* Notifications */}
-              <div className="relative">
+              <div className="relative notification-dropdown">
                 <button
                   onClick={() => setShowNotifications(!showNotifications)}
                   className="p-2 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors relative"
@@ -210,12 +224,69 @@ export default function DashboardPage() {
                   <Bell className="h-5 w-5 text-gray-600" />
                   <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
                 </button>
+                
+                {/* Notification Dropdown */}
+                {showNotifications && (
+                  <div className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-xl border border-gray-200 z-50">
+                    <div className="p-4 border-b border-gray-100">
+                      <h3 className="font-semibold text-gray-900">Notifications</h3>
+                    </div>
+                    <div className="max-h-96 overflow-y-auto">
+                      {/* Recent transactions as notifications */}
+                      {transactions.slice(0, 5).map((transaction, index) => (
+                        <div key={transaction._id || index} className="p-4 border-b border-gray-50 hover:bg-gray-50 transition-colors">
+                          <div className="flex items-start space-x-3">
+                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                              transaction.type === 'credit' ? 'bg-green-100' : 'bg-red-100'
+                            }`}>
+                              {transaction.type === 'credit' ? (
+                                <ArrowDownLeft className="h-4 w-4 text-green-600" />
+                              ) : (
+                                <ArrowUpRight className="h-4 w-4 text-red-600" />
+                              )}
+                            </div>
+                            <div className="flex-1">
+                              <p className="text-sm font-medium text-gray-900">
+                                {transaction.type === 'credit' ? 'Money Added' : 'Payment Made'}
+                              </p>
+                              <p className="text-xs text-gray-500">{transaction.description}</p>
+                              <p className={`text-sm font-semibold ${
+                                transaction.type === 'credit' ? 'text-green-600' : 'text-red-600'
+                              }`}>
+                                {transaction.type === 'credit' ? '+' : '-'}₹{transaction.amount?.toFixed(2)}
+                              </p>
+                            </div>
+                            <div className="text-xs text-gray-400">
+                              {new Date(transaction.createdAt).toLocaleDateString()}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                      
+                      {transactions.length === 0 && (
+                        <div className="p-8 text-center">
+                          <Bell className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                          <p className="text-gray-500">No notifications yet</p>
+                          <p className="text-sm text-gray-400">Your transaction updates will appear here</p>
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-4 border-t border-gray-100">
+                      <button 
+                        onClick={() => setActiveTab('transactions')}
+                        className="w-full text-center text-blue-600 hover:text-blue-700 font-medium text-sm"
+                      >
+                        View All Transactions
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* User Profile */}
               <div className="flex items-center space-x-3 bg-gray-100 rounded-xl px-4 py-2">
                 <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
-                  <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="User" className="w-5 h-5" />
+                  <span className="text-white text-sm font-bold">{user?.name?.charAt(0)}</span>
                 </div>
                 <div className="hidden sm:block">
                   <div className="text-sm font-semibold text-gray-900">{user?.name}</div>
@@ -254,7 +325,7 @@ export default function DashboardPage() {
             <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -mr-10 -mt-10"></div>
             <div className="relative z-10">
               <div className="flex items-center justify-between mb-4">
-                <img src="https://cdn-icons-png.flaticon.com/512/2830/2830284.png" alt="Wallet" className="w-8 h-8" />
+                <Wallet className="w-8 h-8" />
                 <button
                   onClick={() => setBalanceVisible(!balanceVisible)}
                   className="p-1 hover:bg-white/20 rounded-lg transition-colors"
@@ -272,7 +343,7 @@ export default function DashboardPage() {
           {/* Total Credited */}
           <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
             <div className="flex items-center justify-between mb-4">
-              <img src="https://cdn-icons-png.flaticon.com/512/3135/3135706.png" alt="Income" className="w-8 h-8" />
+              <TrendingUp className="w-8 h-8 text-green-500" />
               <TrendingUp className="h-5 w-5 text-green-500" />
             </div>
             <div className="text-sm text-gray-600 mb-1">Total Credited</div>
@@ -282,7 +353,7 @@ export default function DashboardPage() {
           {/* Last Recharge */}
           <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
             <div className="flex items-center justify-between mb-4">
-              <img src="https://cdn-icons-png.flaticon.com/512/3135/3135673.png" alt="Calendar" className="w-8 h-8" />
+              <Calendar className="w-8 h-8 text-blue-500" />
               <Calendar className="h-5 w-5 text-blue-500" />
             </div>
             <div className="text-sm text-gray-600 mb-1">Last Recharge</div>
@@ -298,9 +369,9 @@ export default function DashboardPage() {
           <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
             <div className="flex items-center justify-between mb-4">
               {user?.isPremium ? (
-                <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Premium" className="w-8 h-8" />
+                <Crown className="w-8 h-8 text-yellow-500" />
               ) : (
-                <img src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png" alt="Basic" className="w-8 h-8" />
+                <Shield className="w-8 h-8 text-gray-500" />
               )}
               {user?.isPremium ? <Crown className="h-5 w-5 text-yellow-500" /> : <Shield className="h-5 w-5 text-gray-500" />}
             </div>
@@ -317,7 +388,7 @@ export default function DashboardPage() {
           <div className="lg:col-span-1">
             <nav className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 p-6">
               <div className="text-lg font-bold text-gray-900 mb-6 flex items-center">
-                <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Menu" className="w-6 h-6 mr-2" />
+                <Settings className="w-6 h-6 mr-2" />
                 Quick Actions
               </div>
               <ul className="space-y-3">
@@ -330,7 +401,7 @@ export default function DashboardPage() {
                         : 'text-gray-700 hover:bg-gray-100'
                     }`}
                   >
-                    <img src="https://cdn-icons-png.flaticon.com/512/2830/2830284.png" alt="Overview" className="w-5 h-5 mr-3" />
+                    <Wallet className="w-5 h-5 mr-3" />
                     Dashboard
                   </button>
                 </li>
@@ -343,7 +414,7 @@ export default function DashboardPage() {
                         : 'text-gray-700 hover:bg-gray-100'
                     }`}
                   >
-                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135706.png" alt="Recharge" className="w-5 h-5 mr-3" />
+                    <Plus className="w-5 h-5 mr-3" />
                     Add Money
                   </button>
                 </li>
@@ -356,7 +427,7 @@ export default function DashboardPage() {
                         : 'text-gray-700 hover:bg-gray-100'
                     }`}
                   >
-                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135673.png" alt="Pay" className="w-5 h-5 mr-3" />
+                    <Send className="w-5 h-5 mr-3" />
                     Send Money
                   </button>
                 </li>
@@ -369,7 +440,7 @@ export default function DashboardPage() {
                         : 'text-gray-700 hover:bg-gray-100'
                     }`}
                   >
-                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png" alt="History" className="w-5 h-5 mr-3" />
+                    <History className="w-5 h-5 mr-3" />
                     Transaction History
                   </button>
                 </li>
@@ -399,7 +470,7 @@ export default function DashboardPage() {
                 <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 p-6">
                   <div className="flex items-center justify-between mb-6">
                     <h2 className="text-xl font-bold text-gray-900 flex items-center">
-                      <img src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png" alt="Activity" className="w-6 h-6 mr-2" />
+                      <History className="w-6 h-6 mr-2" />
                       Recent Activity
                     </h2>
                     <button className="text-blue-600 hover:text-blue-700 font-medium">View All</button>
@@ -436,7 +507,7 @@ export default function DashboardPage() {
                     
                     {transactions.length === 0 && (
                       <div className="text-center py-12">
-                        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="No transactions" className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                        <History className="w-16 h-16 mx-auto mb-4 text-gray-300" />
                         <p className="text-gray-500">No transactions yet</p>
                         <p className="text-sm text-gray-400">Start by adding money to your wallet</p>
                       </div>
@@ -451,7 +522,7 @@ export default function DashboardPage() {
                     className="group bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl p-6 text-white hover:from-green-600 hover:to-emerald-700 transition-all duration-200 transform hover:-translate-y-1 hover:shadow-xl"
                   >
                     <div className="flex items-center justify-between mb-4">
-                      <img src="https://cdn-icons-png.flaticon.com/512/3135/3135706.png" alt="Add Money" className="w-8 h-8" />
+                      <Plus className="w-8 h-8" />
                       <ArrowUpRight className="h-5 w-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                     </div>
                     <div className="text-left">
@@ -465,7 +536,7 @@ export default function DashboardPage() {
                     className="group bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl p-6 text-white hover:from-purple-600 hover:to-pink-700 transition-all duration-200 transform hover:-translate-y-1 hover:shadow-xl"
                   >
                     <div className="flex items-center justify-between mb-4">
-                      <img src="https://cdn-icons-png.flaticon.com/512/3135/3135673.png" alt="Send Money" className="w-8 h-8" />
+                      <Send className="w-8 h-8" />
                       <ArrowUpRight className="h-5 w-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                     </div>
                     <div className="text-left">
@@ -481,7 +552,7 @@ export default function DashboardPage() {
               <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 p-8">
                 <div className="text-center mb-8">
                   <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135706.png" alt="Add Money" className="w-8 h-8" />
+                    <Plus className="w-8 h-8 text-white" />
                   </div>
                   <h2 className="text-2xl font-bold text-gray-900 mb-2">Add Money to Wallet</h2>
                   <p className="text-gray-600">Choose an amount to recharge your wallet</p>
@@ -531,7 +602,7 @@ export default function DashboardPage() {
               <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 p-8">
                 <div className="text-center mb-8">
                   <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135673.png" alt="Send Money" className="w-8 h-8" />
+                    <Send className="w-8 h-8 text-white" />
                   </div>
                   <h2 className="text-2xl font-bold text-gray-900 mb-2">Send Money</h2>
                   <p className="text-gray-600">Pay using your wallet balance</p>
@@ -582,7 +653,7 @@ export default function DashboardPage() {
                 <div className="flex items-center justify-between mb-8">
                   <div>
                     <h2 className="text-2xl font-bold text-gray-900 flex items-center">
-                      <img src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png" alt="History" className="w-8 h-8 mr-3" />
+                      <History className="w-8 h-8 mr-3" />
                       Transaction History
                     </h2>
                     <p className="text-gray-600 mt-1">View all your wallet transactions</p>
@@ -620,43 +691,26 @@ export default function DashboardPage() {
                         </div>
                         <div className="ml-4">
                           <div className="font-bold text-gray-900 text-lg">{transaction.description}</div>
-                          <div className="text-sm text-gray-500 flex items-center mt-1">
+                          <div className="text-sm text-gray-500 flex items-center">
                             <Clock className="h-4 w-4 mr-1" />
-                            {new Date(transaction.createdAt).toLocaleString()}
+                            {new Date(transaction.createdAt).toLocaleDateString()} at {new Date(transaction.createdAt).toLocaleTimeString()}
                           </div>
-                          <div className="text-xs text-gray-400 mt-1">
-                            Balance after: ₹{transaction.balanceAfter?.toFixed(2)}
-                          </div>
+                          <div className="text-xs text-gray-400">Balance after: ₹{transaction.balanceAfter?.toFixed(2)}</div>
                         </div>
                       </div>
-                      <div className="text-right">
-                        <div className={`font-bold text-xl ${
-                          transaction.type === 'credit' ? 'text-green-600' : 'text-red-600'
-                        }`}>
-                          {transaction.type === 'credit' ? '+' : '-'}₹{transaction.amount?.toFixed(2)}
-                        </div>
-                        <div className={`text-sm px-3 py-1 rounded-full mt-2 ${
-                          transaction.type === 'credit' 
-                            ? 'bg-green-100 text-green-700' 
-                            : 'bg-red-100 text-red-700'
-                        }`}>
-                          {transaction.type === 'credit' ? 'Money Added' : 'Money Sent'}
-                        </div>
+                      <div className={`font-bold text-xl ${
+                        transaction.type === 'credit' ? 'text-green-600' : 'text-red-600'
+                      }`}>
+                        {transaction.type === 'credit' ? '+' : '-'}₹{transaction.amount?.toFixed(2)}
                       </div>
                     </div>
                   ))}
                   
-                  {transactions.length === 0 && (
-                    <div className="text-center py-16">
-                      <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="No transactions" className="w-20 h-20 mx-auto mb-6 opacity-50" />
-                      <h3 className="text-xl font-semibold text-gray-900 mb-2">No transactions yet</h3>
-                      <p className="text-gray-500 mb-6">Your transaction history will appear here</p>
-                      <button
-                        onClick={() => setActiveTab('recharge')}
-                        className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all duration-200"
-                      >
-                        Add Money Now
-                      </button>
+                  {transactions.filter(t => filterType === 'all' || t.type === filterType).length === 0 && (
+                    <div className="text-center py-12">
+                      <History className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+                      <p className="text-gray-500">No transactions found</p>
+                      <p className="text-sm text-gray-400">Try changing the filter or add some transactions</p>
                     </div>
                   )}
                 </div>
