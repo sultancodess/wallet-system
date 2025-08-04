@@ -5,7 +5,7 @@ import ToastProvider from '../components/ToastProvider'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'StageOne Wallet - Your Money. Your Control.',
+  title: 'Wallet System - Your Money. Your Control.',
   description: 'Secure wallet system for recharging, storing, and spending money seamlessly.',
 }
 

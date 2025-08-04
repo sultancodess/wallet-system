@@ -49,11 +49,11 @@
     },
     {
       "userId": "65puq0p4g",
-      "balance": "U2FsdGVkX18xXHyLepXZSdD4mOeCudr4LuU9BrC1XZc=",
-      "lastRechargeDate": "2025-08-04T15:18:42.232Z",
-      "totalCredited": "U2FsdGVkX19Z94k4yfBBw1GBM3tCmK0pRRF63xTx91w=",
+      "balance": "U2FsdGVkX19a/mBF1O8CaK3znh6/cOS+Z/e1i32QYuQ=",
+      "lastRechargeDate": "2025-08-04T15:28:05.560Z",
+      "totalCredited": "U2FsdGVkX19fZfQGwXTNZiQrgND7iMugzeAQOb0zI9U=",
       "createdAt": "2025-08-04T15:17:59.839Z",
-      "updatedAt": "2025-08-04T15:18:42.232Z",
+      "updatedAt": "2025-08-04T15:28:27.097Z",
       "_id": "uwqw0zepv"
     }
   ],
@@ -138,6 +138,33 @@
       "balanceAfter": 2000,
       "createdAt": "2025-08-04T15:18:42.234Z",
       "_id": "c1kjr6tt7"
+    },
+    {
+      "userId": "65puq0p4g",
+      "type": "credit",
+      "amount": 500,
+      "description": "Wallet Recharge",
+      "balanceAfter": 2500,
+      "createdAt": "2025-08-04T15:28:01.035Z",
+      "_id": "3edwd1iuq"
+    },
+    {
+      "userId": "65puq0p4g",
+      "type": "credit",
+      "amount": 100,
+      "description": "Wallet Recharge",
+      "balanceAfter": 2600,
+      "createdAt": "2025-08-04T15:28:05.562Z",
+      "_id": "e0yjuuldh"
+    },
+    {
+      "userId": "65puq0p4g",
+      "type": "debit",
+      "amount": 9091,
+      "description": "Mock Order Payment",
+      "balanceAfter": -6491,
+      "createdAt": "2025-08-04T15:28:27.100Z",
+      "_id": "f9mv4dzft"
     }
   ]
 }
