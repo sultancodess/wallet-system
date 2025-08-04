@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server'
 import clientPromise from '../../../../lib/mongodb.js'
 import { comparePassword, generateToken } from '../../../../lib/auth.js'
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 export async function POST(request) {
   try {
     const { email, password } = await request.json()

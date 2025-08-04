@@ -2,7 +2,9 @@ import { NextResponse } from 'next/server'
 import clientPromise from '../../../../lib/mongodb.js'
 import { hashPassword, generateToken } from '../../../../lib/auth.js'
 import { encryptBalance } from '../../../../lib/encryption.js'
-import { validateEmail, validatePassword, validateName, sanitizeInput } from '@/lib/validation'
+
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
 
 export async function POST(request) {
   try {

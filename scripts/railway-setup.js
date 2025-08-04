@@ -1,36 +1,46 @@
 // Railway deployment setup script
-const fs = require('fs')
-const path = require('path')
+const fs = require("fs");
+const path = require("path");
 
-console.log('🚀 Setting up StageOne Wallet for Railway deployment...')
+console.log("🚀 Setting up StageOne Wallet for Railway deployment...");
 
-// Check if required environment variables are set
-const requiredEnvVars = [
-  'MONGODB_URI',
-  'JWT_SECRET', 
-  'ENCRYPTION_SECRET'
-]
+// Set dummy environment variables for build if they don't exist
+const requiredEnvVars = {
+  MONGODB_URI: "mongodb://localhost:27017/stageone_wallet_build",
+  JWT_SECRET: "build-time-jwt-secret-placeholder-minimum-32-characters",
+  ENCRYPTION_SECRET:
+    "build-time-encryption-secret-placeholder-minimum-32-characters",
+};
 
-const missingVars = requiredEnvVars.filter(varName => !process.env[varName])
+let hasRealEnvVars = true;
 
-if (missingVars.length > 0) {
-  console.warn('⚠️  Warning: Missing environment variables:', missingVars.join(', '))
-  console.log('📝 Please set these in your Railway dashboard:')
-  missingVars.forEach(varName => {
-    console.log(`   ${varName}=your-${varName.toLowerCase().replace('_', '-')}-here`)
-  })
-} else {
-  console.log('✅ All required environment variables are set!')
-}
-
-// Verify MongoDB connection string format
-if (process.env.MONGODB_URI) {
-  const uri = process.env.MONGODB_URI
-  if (!uri.startsWith('mongodb://') && !uri.startsWith('mongodb+srv://')) {
-    console.error('❌ Invalid MongoDB URI format. Must start with mongodb:// or mongodb+srv://')
-    process.exit(1)
+Object.entries(requiredEnvVars).forEach(([varName, defaultValue]) => {
+  if (!process.env[varName]) {
+    console.log(`⚠️  Setting build-time placeholder for ${varName}`);
+    process.env[varName] = defaultValue;
+    hasRealEnvVars = false;
   }
-  console.log('✅ MongoDB URI format is valid')
+});
+
+if (hasRealEnvVars) {
+  console.log("✅ All required environment variables are set!");
+
+  // Verify MongoDB connection string format
+  const uri = process.env.MONGODB_URI;
+  if (!uri.startsWith("mongodb://") && !uri.startsWith("mongodb+srv://")) {
+    console.error(
+      "❌ Invalid MongoDB URI format. Must start with mongodb:// or mongodb+srv://"
+    );
+    process.exit(1);
+  }
+  console.log("✅ MongoDB URI format is valid");
+} else {
+  console.log(
+    "📝 Using build-time placeholders. Make sure to set real values in Railway dashboard:"
+  );
+  console.log("   MONGODB_URI=your-mongodb-connection-string");
+  console.log("   JWT_SECRET=your-jwt-secret-here");
+  console.log("   ENCRYPTION_SECRET=your-encryption-secret-here");
 }
 
-console.log('🎉 Railway setup complete!')
+console.log("🎉 Railway setup complete!");

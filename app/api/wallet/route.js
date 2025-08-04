@@ -4,6 +4,9 @@ import clientPromise from '../../../lib/mongodb.js'
 import { getAuthUser } from '../../../lib/auth.js'
 import { decryptBalance } from '../../../lib/encryption.js'
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 export async function GET(request) {
   try {
     const user = getAuthUser(request)

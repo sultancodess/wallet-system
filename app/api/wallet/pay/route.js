@@ -3,7 +3,9 @@ import { ObjectId } from 'mongodb'
 import clientPromise from '../../../../lib/mongodb.js'
 import { getAuthUser } from '../../../../lib/auth.js'
 import { encryptBalance, decryptBalance } from '../../../../lib/encryption.js'
-import { validateAmount, sanitizeInput } from '@/lib/validation'
+
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
 
 export async function POST(request) {
   try {
